@@ -1,0 +1,12 @@
+import CrudManager from '../components/CrudManager';
+import { PageHead, Badge, Avatar } from '../components/ui';
+import { useAuth } from '../context/Auth';
+import { ROLE_LABEL, fmtDT } from '../utils';
+const ROLES = Object.entries(ROLE_LABEL).map(([value, label]) => ({ value, label }));
+export default function Users() {
+  const { can } = useAuth();
+  return (<><PageHead title="Users" sub="People, roles and the departments each staff member may serve." />
+    <CrudManager title="Users" singular="user" endpoint="/users" canWrite={can('admin')} canDelete={can('admin')}
+      columns={[{ key: 'name', label: 'Name', render: (u) => <span className="row gap-sm"><Avatar sm name={u.name} /><span><b>{u.name}</b><div className="small muted">{u.email}</div></span></span> }, { key: 'role', label: 'Role', render: (u) => <Badge tone={u.role === 'admin' ? 'violet' : u.role === 'employee' ? 'gray' : 'blue'}>{ROLE_LABEL[u.role]}</Badge> }, { key: 'department', label: 'Department', render: (u) => u.department?.name || '-' }, { key: 'scope', label: 'Serves', render: (u) => (['manager', 'technician'].includes(u.role) ? (u.scopeDepartments?.length ? u.scopeDepartments.map((d) => d.name).join(', ') : 'All departments') : '-') }, { key: 'active', label: 'Status', render: (u) => <Badge tone={u.active ? 'green' : 'gray'}>{u.active ? 'Active' : 'Disabled'}</Badge> }, { key: 'lastLogin', label: 'Last sign-in', render: (u) => (u.lastLogin ? fmtDT(u.lastLogin) : 'Never') }]}
+      fields={[{ name: 'name', label: 'Full name' }, { name: 'email', label: 'Email', type: 'email' }, { name: 'password', label: 'Password', type: 'password', hint: 'At least 8 characters' }, { name: 'role', label: 'Role', type: 'select', required: true, options: ROLES, default: 'employee' }, { name: 'department', label: 'Home department', type: 'select', source: 'departments' }, { name: 'scopeDepartments', label: 'Departments served (managers and technicians)', type: 'multiselect', source: 'departments', hint: 'Leave empty to serve every department. This limits which tickets they can see.' }, { name: 'skills', label: 'Skills (used by auto-assign)', type: 'multiselect', source: 'categories' }, { name: 'jobTitle', label: 'Job title' }, { name: 'phone', label: 'Phone' }, { name: 'capacity', label: 'Ticket capacity', type: 'number', default: 10 }, { name: 'active', label: 'Status', type: 'checkbox', checkLabel: 'Account is active' }]} /></>);
+}

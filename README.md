@@ -486,9 +486,7 @@ See **[DEPLOYMENT.md](DEPLOYMENT.md)** for step-by-step instructions covering:
 | Topic | Note |
 |---|---|
 | **SLA timezone** | Fixed UTC offset in minutes — no DST rules. Update in Configuration when your offset changes. |
-| **File storage** | Uploads stored on local disk at `server/uploads/`. Use S3/Cloudinary for multi-server or serverless deployments. |
 | **Notifications** | Poll every 30 s. Swap in Socket.IO for true push. |
 | **SLA hold** | Adds wall-clock hold duration to due dates (not business-hours-aware while paused). |
 | **Auto-close** | Resolved tickets not confirmed by requester are closed automatically (configurable days in Settings). |
-| **Production** | Set `JWT_SECRET` to 32+ random chars, `NODE_ENV=production`, serve `client/dist` from the same origin or configure `CLIENT_URL`. |
 | **Groq rate limits** | Free Groq tier has RPM limits. The fallback classifier activates automatically on 429 errors. |
